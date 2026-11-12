@@ -19,7 +19,7 @@ Plugin API: [docs/03-architecture.md](https://github.com/kotilo-dev/kotilo-kit/b
 
 ## Published files
 
-`https://kotilo-dev.github.io/kit-tools/`: `index.json`, `index.json.sig` (base64 ed25519 signature over `index.json`) and `tools/<id>.ts`. `index.json` pins every tool file by sha256.
+`https://kotilo.dev/kit-tools/`: `index.json`, `index.json.sig` (base64 ed25519 signature over `index.json`) and `tools/<id>.ts`. `index.json` pins every tool file by sha256.
 
 ---
 
