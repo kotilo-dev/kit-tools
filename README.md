@@ -11,8 +11,9 @@ Kit downloads `index.json`, checks its ed25519 signature against the public key 
 ## Adding a tool
 
 1. `tools/<id>.ts`: the tool. The file name must be the tool id (`a-z`, `0-9`, `-`). Use `import { defineTool, fail } from '@kotilo/kit-core'`; nothing else can be imported.
-2. `tools/<id>.json`: `{ "version": "1.0.0", "summary": { "en": "…", "tr": "…" } }`. Bump `version` with every change.
-3. Add at least one `examples` entry. CI runs each example in the sandbox with both `en` and `tr` locales.
+2. `tools/<id>.json`: `{ "version": "1.0.0", "summary": { "en": "…", "tr": "…" } }`. Bump `version` with every change; CI fails if a published version's file changes.
+3. Add at least one `examples` entry. CI type-checks the file against kit-core and runs each example in the sandbox with both `en` and `tr` locales.
+   For typed options, use a type alias (`type Opts = { sep: string }`), not an `interface`: `defineTool<Opts>` needs `Opts` to be assignable to a string-keyed record.
 4. Open a PR. After it is merged, CI signs the new `index.json` and publishes it.
 
 Plugin API: [docs/03-architecture.md](https://github.com/kotilo-dev/kotilo-kit/blob/main/docs/03-architecture.md).

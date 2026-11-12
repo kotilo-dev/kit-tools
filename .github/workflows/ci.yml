@@ -31,8 +31,13 @@ jobs:
         with:
           node-version: 22
       - run: pnpm install --frozen-lockfile --dir .kit
-      - run: KIT_DIR=.kit .kit/node_modules/.bin/tsx --import ./.kit/apps/cli/raw-hook.mjs scripts/validate.ts
+      - name: typecheck tools against kit-core
+        run: .kit/node_modules/.bin/tsc -p tsconfig.json
+      - name: run examples in the plugin sandbox
+        run: KIT_DIR=.kit .kit/node_modules/.bin/tsx --import ./.kit/apps/cli/raw-hook.mjs scripts/validate.ts
       - run: node scripts/build-index.mjs
+      - name: changed tools bump their version
+        run: node scripts/check-versions.mjs
 
   publish:
     needs: validate

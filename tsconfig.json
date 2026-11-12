@@ -1,0 +1,10 @@
+{
+  // Type-checks tools/*.ts against the real kit-core API from a kotilo-kit checkout in .kit/ (CI clones it).
+  "extends": "./.kit/tsconfig.base.json",
+  "compilerOptions": {
+    "paths": { "@kotilo/kit-core": ["./.kit/packages/kit-core/src/index.ts"] },
+    "typeRoots": ["./.kit/node_modules/@types"],
+    "types": ["node"]
+  },
+  "include": ["tools/*.ts"]
+}
