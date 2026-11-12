@@ -1,8 +1,7 @@
 import { defineTool, fail } from '@kotilo/kit-core';
 
-interface Opts {
-  sep: string;
-}
+// a type alias, not an interface: defineTool<O> needs O to be assignable to Record<string, …>
+type Opts = { sep: string };
 
 // letters NFD can't split into base + mark
 const FOLD: Record<string, string> = { ı: 'i', ß: 'ss', æ: 'ae', ø: 'o', œ: 'oe', đ: 'd', ł: 'l' };
