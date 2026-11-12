@@ -1,0 +1,61 @@
+name: ci
+
+# PRs: validate in Kotilo Kit's real plugin sandbox. main: also sign index.json and publish to Pages.
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/checkout@v7
+        with:
+          repository: kotilo-dev/kotilo-kit
+          ref: main
+          path: .kit
+      - uses: pnpm/action-setup@v6
+        with:
+          package_json_file: .kit/package.json
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+      - run: pnpm install --frozen-lockfile --dir .kit
+      - run: KIT_DIR=.kit .kit/node_modules/.bin/tsx --import ./.kit/apps/cli/raw-hook.mjs scripts/validate.ts
+      - run: node scripts/build-index.mjs
+
+  publish:
+    needs: validate
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+      - run: node scripts/build-index.mjs
+      - run: node scripts/sign.mjs
+        env:
+          KIT_TOOLS_SIGNING_KEY: ${{ secrets.KIT_TOOLS_SIGNING_KEY }}
+      - uses: actions/configure-pages@v6
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: dist
+      - id: deploy
+        uses: actions/deploy-pages@v5

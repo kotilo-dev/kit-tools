@@ -1,0 +1,10 @@
+{
+  "name": "kit-tools",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "validate": "tsx --import ./.kit/apps/cli/raw-hook.mjs scripts/validate.ts",
+    "build": "node scripts/build-index.mjs",
+    "sign": "node scripts/sign.mjs"
+  }
+}
